@@ -1,0 +1,3 @@
+[submodule "aias-core"]
+	path = aias-core
+	url = git@github.com:project-aias/aias-core.git
