@@ -31,8 +31,11 @@ def verify():
 
     lib.verify.argtypes = (c_char_p, c_char_p, c_char_p, c_char_p)
     res = lib.verify(signature, message, signer_pubkey, judge_pubkey)
-    res = bool(res)
-    return f"Verify result: {str(res)}"
+
+    resp = {
+        "result": bool(res)
+        }
+    return json.dumps(resp)
 
 
 def get_lib():
