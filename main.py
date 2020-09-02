@@ -6,13 +6,13 @@ from ctypes import cdll, c_char_p, c_int32
 def main():
     lib = get_lib()
 
-    with open("signature.txt", 'rb') as f:
+    with open("parameters/signature.txt", 'rb') as f:
         signature = f.read()
-    with open("message.txt", 'rb') as f:
+    with open("parameters/message.txt", 'rb') as f:
         message = f.read()
-    with open("signer_pubkey.pem", 'rb') as f:
+    with open("parameters/signer_pubkey.pem", 'rb') as f:
         signer_pubkey = f.read()
-    with open("judge_pubkey.pem", 'rb') as f:
+    with open("parameters/judge_pubkey.pem", 'rb') as f:
         judge_pubkey = f.read()
 
     lib.verify.restype = c_int32
