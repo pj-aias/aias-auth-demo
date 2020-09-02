@@ -1,8 +1,10 @@
+import platform
+
 import ctypes
 from ctypes import cdll, c_char_p, c_int32
 
 def main():
-    lib = cdll.LoadLibrary("aias-core/ffi/target/release/liblib.dylib")
+    lib = get_lib()
 
     with open("signature.txt", 'rb') as f:
         signature = f.read()
@@ -18,6 +20,14 @@ def main():
     res = lib.verify(signature, message, signer_pubkey, judge_pubkey)
 
     print(f"verify result: {bool(res)}")
+
+def get_lib():
+    pf = platform.system()
+    if pf == 'Darwin':
+        return cdll.LoadLibrary("aias-core/ffi/target/release/liblib.dylib")
+    elif pf == 'Linux':
+        return cdll.LoadLibrary("aias-core/ffi/target/release/liblib.so")
+
 
 if __name__ == "__main__":
     main()
