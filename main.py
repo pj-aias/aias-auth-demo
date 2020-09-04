@@ -39,7 +39,7 @@ O+zc6JPZDWBppJDWot9d5HeNEjDBMcSqcpeXXYU8XvxA+uECLPctLgNMWxyKFx95
 0sVQIY0n9eLL7sg5aCUpGKf4Qc88wF8OPYnBzjCeiJusjkGhQ5rqdQ==
 - ----ENDRSAPRIVATEKEY - ----"""
 
-def verify(data):
+def verify_signature(data):
     lib = get_lib()
 
     with open("parameters/message.txt", 'rb') as f:
@@ -54,9 +54,21 @@ def verify(data):
 
     return lib.verify(data, signer_pubkey, judge_pubkey)
 
+def verify_token(session, body):
+    print("session:", session)
+    try:
+        data = json.loads(body)
+        v = session['token'] == data['signed']['random']
+        return v
+    except Exception as e:
+        print(f"error: {e}")
+        return False
+
 @app.route('/verify', methods=['POST'])
 def index():
-    valid = verify(request.get_data())
+    valid_sig = verify_signature(request.get_data())
+    valid_token = verify_token(session, request.get_data())
+    valid = valid_sig and valid_token
 
     resp = {
         "result": bool(valid)
@@ -66,7 +78,7 @@ def index():
         rng = random.SystemRandom()
         random_token = rng.randint(100000, 999999)
 
-        resp["random"] = str(random_token)
+        resp['random'] = str(random_token)
         session['token'] = random_token
 
     return json.dumps(resp)
