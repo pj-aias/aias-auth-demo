@@ -9,16 +9,8 @@ from flask import Flask, request, json, jsonify
 
 app = Flask(__name__)
 
-
-@app.route('/verify', methods=['POST'])
-def verify():
+def verify(data):
     lib = get_lib()
-
-    print(type(request.json))
-    signature_json = request.json['fbs_signature']
-    print(type(signature_json))
-    signature = json.dumps(signature_json).encode('utf-8')
-    print(type(signature))
 
     with open("parameters/message.txt", 'rb') as f:
         message = f.read()
@@ -27,29 +19,30 @@ def verify():
     with open("parameters/judge_pubkey.pem", 'rb') as f:
         judge_pubkey = f.read()
 
-    lib.verify.restype = c_int32
+    print(judge_pubkey)
 
-    lib.verify.argtypes = (c_char_p, c_char_p, c_char_p, c_char_p)
-    res = lib.verify(signature, message, signer_pubkey, judge_pubkey)
+    lib.verify.restype = c_int32
+    lib.verify.argtypes = (c_char_p, c_char_p, c_char_p)
+
+    return lib.verify(data, signer_pubkey, judge_pubkey)
+
+@app.route('/verify', methods=['POST'])
+def index():
+    is_invaild = verify(request.get_data())
 
     resp = {
-        "result": bool(res)
-        }
+        "result": bool(is_invaild)
+    }
     return json.dumps(resp)
 
 
 def get_lib():
     pf = platform.system()
     if pf == 'Darwin':
-        return cdll.LoadLibrary("aias-core/ffi/target/release/liblib.dylib")
+        return cdll.LoadLibrary("aias-auth-sdk/ffi/target/release/liblib.dylib")
     elif pf == 'Linux':
-        return cdll.LoadLibrary("aias-core/ffi/target/release/liblib.so")
-
-
-def main():
-    app.run()
-
+        return cdll.LoadLibrary("aias-auth-sdk/ffi/target/release/liblib.so")
 
 
 if __name__ == "__main__":
-    main()
+    app.run()
