@@ -1,3 +1,3 @@
-[submodule "aias-core"]
-	path = aias-core
-	url = git@github.com:project-aias/aias-core.git
+[submodule "aias-auth-sdk"]
+	path = aias-auth-sdk
+	url = https://github.com/project-aias/aias-auth-sdk
