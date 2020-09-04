@@ -60,7 +60,7 @@ def index():
     }
 
     if valid:
-        print(reqJson['signature'])
+        print(reqJson['fair_blind_signature'])
         with open('data.txt', 'a') as f:
             print(reqJson["signed"]["data"], file=f)
         random_token = get_random_token()
@@ -97,4 +97,4 @@ def get_lib():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0')
