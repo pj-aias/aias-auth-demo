@@ -67,10 +67,12 @@ def token():
     return json.dumps(resp)
 
 def get_random_token():
-    return 111111
-    rng = random.SystemRandom()
-    random_token = rng.randint(100000, 999999)
-    return random_token
+    if app.debug == True:
+        return 111111
+    else:
+        rng = random.SystemRandom()
+        random_token = rng.randint(100000, 999999)
+        return random_token
 
 def get_lib():
     pf = platform.system()
