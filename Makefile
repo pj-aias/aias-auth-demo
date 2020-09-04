@@ -1,5 +1,5 @@
 MAIN_PROGRAM := main.py
-CORE_LIB := aias-core/ffi/
+CORE_LIB := aias-auth-sdk/ffi/
 
 run: build
 	python $(MAIN_PROGRAM)
@@ -12,7 +12,7 @@ verify:
 		-i \
 		-X POST \
 		-H "Content-Type: application/json" \
-		-d "$$(echo '{"fbs_signature": '$$(cat parameters/signature.txt)'}')"
+		-d "$$(cat parameters/data.txt)"
 
 clean:
 	rm -rf $(CORE_LIB)/target/
