@@ -28,10 +28,10 @@ def verify(data):
 
 @app.route('/verify', methods=['POST'])
 def index():
-    is_invaild = verify(request.get_data())
+    is_valid = verify(request.get_data())
 
     resp = {
-        "result": bool(is_invaild)
+        "result": bool(is_valid)
     }
     return json.dumps(resp)
 
