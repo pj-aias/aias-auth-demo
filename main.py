@@ -19,8 +19,6 @@ def verify(data):
     with open("parameters/judge_pubkey.pem", 'rb') as f:
         judge_pubkey = f.read()
 
-    print(judge_pubkey)
-
     lib.verify.restype = c_int32
     lib.verify.argtypes = (c_char_p, c_char_p, c_char_p)
 
