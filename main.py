@@ -38,17 +38,31 @@ def verify_token(session, body):
         print(f"error: {e}")
         return False
 
-@app.route('/verify', methods=['POST'])
+@app.route('/get', methods=['GET'])
+def get():
+    dataFile = open('data.txt', 'r') 
+    lines = dataFile.readlines()
+    lines = list(map(lambda line: line.rstrip('\n'), lines))
+
+    resp = {'data':lines}
+    return json.dumps(resp)
+
+@app.route('/post', methods=['POST'])
 def index():
     valid_sig = verify_signature(request.get_data())
     valid_token = verify_token(session, request.get_data())
     valid = valid_sig and valid_token
+
+    reqJson = json.loads(request.get_data())
 
     resp = {
         "result": bool(valid)
     }
 
     if valid:
+        print(reqJson['signature'])
+        with open('data.txt', 'a') as f:
+            print(reqJson["signed"]["data"], file=f)
         random_token = get_random_token()
 
         resp['random'] = str(random_token)
